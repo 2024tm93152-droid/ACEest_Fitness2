@@ -42,11 +42,18 @@ pipeline {
                 docker push $DOCKER_USERNAME/$DOCKER_IMAGE:$DOCKER_TAG
                 '''
             }
-}
+        }
         stage('Deploy to Kubernetes') {
             steps {
                 sh 'kubectl apply -f k8s/deployment.yaml'
                 sh 'kubectl apply -f k8s/service.yaml'
+            }
+        }
+        stage('SonarQube Analysis') {
+            steps {
+                withSonarQubeEnv('sonarqube-server') {
+                sh 'sonar-scanner'
+                }
             }
         }
     }
