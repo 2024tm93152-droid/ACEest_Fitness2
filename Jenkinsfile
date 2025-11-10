@@ -4,6 +4,7 @@ pipeline {
         DOCKERHUB_CREDENTIALS = credentials('dockerhub-creds')
         DOCKER_IMAGE = 'aceest-fitness-app'
         DOCKER_TAG = 'latest'
+            DOCKER_USERNAME = 'amruthaav03'
     }
     stages {
         stage('Checkout') {
@@ -36,11 +37,12 @@ pipeline {
         }
         stage('Push Docker Image') {
             steps {
-                sh 'echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin'
-                sh 'docker tag $DOCKER_IMAGE:$DOCKER_TAG $DOCKERHUB_CREDENTIALS_USR/$DOCKER_IMAGE:$DOCKER_TAG'
-                sh 'docker push $DOCKERHUB_CREDENTIALS_USR/$DOCKER_IMAGE:$DOCKER_TAG'
+                sh '''
+                echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin
+                docker push $DOCKER_USERNAME/$DOCKER_IMAGE:$DOCKER_TAG
+                '''
             }
-        }
+}
         stage('Deploy to Kubernetes') {
             steps {
                 sh 'kubectl apply -f k8s/deployment.yaml'
