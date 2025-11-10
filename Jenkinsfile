@@ -51,8 +51,14 @@ pipeline {
         }
         stage('SonarQube Analysis') {
             steps {
-                withSonarQubeEnv('sonarqube-server') {
-                sh 'sonar-scanner'
+                withSonarQubeEnv('MySonarQube') {
+                    sh '''
+                    sonar-scanner \
+                    -Dsonar.projectKey=aceest-fitness \
+                    -Dsonar.sources=. \
+                    -Dsonar.host.url=http://localhost:9000 \
+                    -Dsonar.login=$SONAR_TOKEN
+                    '''
                 }
             }
         }
