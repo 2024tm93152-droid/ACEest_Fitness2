@@ -14,6 +14,6 @@ spec:
     spec:
       containers:
       - name: aceest-fitness
-        image: aceest-fitness-app:latest
+        image: amruthaav03/aceest-fitness-app:latest
         ports:
         - containerPort: 5000
